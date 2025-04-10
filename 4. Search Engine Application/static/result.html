@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Search Results</title>
+    <link rel="stylesheet" type="text/css" href="./static/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Web Search Results</h1>
+      <form method="post" action="/websearch">
+        <input
+          type="text"
+          placeholder="Enter your search query"
+          value="{{data[1]}}"
+        />
+        <button type="submit">Search</button>
+      </form>
+      {% for item in data[0]%}
+      <div class="results">
+        <div class="result">
+          <h3>Result</h3>
+          <a href="{{item}}">{{item}}</a>
+        </div>
+      </div>
+      {%endfor%}
+    </div>
+    <p>The query was: {{data}}</p>
+  </body>
+</html>

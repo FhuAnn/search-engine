@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Search Result</title>
+    <link rel="stylesheet" type="text/css" href="./static/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Image Search Results</h1>
+      <form method="post" action="/search_images">
+        <input
+          type="text"
+          placeholder="Enter your search query"
+          value="{{data[1]}}"
+        />
+        <button type="submit">Search</button>
+      </form>
+      <div class="results">
+        {%for item in data[0]%}
+        <img src="{{item['url']}}" alt="{{item['alt_text']}}" /><br />
+        <a href="{{item['source_url']}}">Image Source</a>
+        {%endfor%}
+      </div>
+    </div>
+  </body>
+</html>
