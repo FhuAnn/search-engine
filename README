@@ -1,7 +1,7 @@
 After clone, run this:
 docker compose up -d
 
-Then go to terminal and copy pase and run this:
+Then go to terminal and copy pase and run these:
 docker exec -it mongo-shard1-1 mongosh --eval "rs.initiate({
  _id: \"mongo-shard1-rs\",
  members: [
