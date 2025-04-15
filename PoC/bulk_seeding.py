@@ -46,17 +46,24 @@ def compute_tfidf(documents):
     return tfidf_vectorizer.fit_transform(documents)
 
 # Phân loại bucket từ TF-IDF
-def get_tfidf_bucket(value):
-    if value < 0.05:
+def get_tfidf_bucket(score):
+    if score < 0.05:
         return "very_low"
-    elif value < 0.1:
+    elif score < 0.10:
         return "low"
-    elif value < 0.3:
+    elif score < 0.15:
+        return "medium_low"
+    elif score < 0.20:
+        return "low_medium"
+    elif score < 0.30:
         return "medium"
-    elif value < 0.7:
+    elif score < 0.40:
+        return "high_medium"
+    elif score < 0.50:
         return "high"
     else:
         return "very_high"
+
 
 # Seeding dữ liệu
 def seed_data(batch_size=1000, total_docs=10000):
