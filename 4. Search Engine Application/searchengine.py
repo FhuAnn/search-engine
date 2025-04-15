@@ -46,7 +46,7 @@ def web_search():
             'http://localhost:5000/b',
             'http://localhost:5000/c',
             'http://localhost:5000/d',
-            'http://localhost:5000/e']
+            'http://localhost:5000/e',]
     tokenized_text = load_tokenized_text("tokenized_text_pickle.pkl")
     tfidf = TfidfVectorizer()
     tfidf_vectors = tfidf.fit_transform

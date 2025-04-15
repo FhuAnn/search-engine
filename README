@@ -1,0 +1,43 @@
+After clone, run this:
+docker compose up -d
+
+Then go to terminal and copy pase and run this:
+docker exec -it mongo-shard1-1 mongosh --eval "rs.initiate({
+ _id: \"mongo-shard1-rs\",
+ members: [
+   {_id: 0, host: \"mongo-shard1-1\"},
+   {_id: 1, host: \"mongo-shard1-2\"},
+   {_id: 2, host: \"mongo-shard1-3\"}
+ ]
+})"
+
+
+docker exec -it mongo-shard2-1 mongosh --eval "rs.initiate({
+ _id: \"mongo-shard2-rs\",
+ members: [
+   {_id: 0, host: \"mongo-shard2-1\"},
+   {_id: 1, host: \"mongo-shard2-2\"},
+   {_id: 2, host: \"mongo-shard2-3\"}
+ ]
+})"
+
+docker exec -it mongo-config-server-1 mongosh --port 27017 --eval "rs.initiate({                                                                                                 
+ _id: \"mongo-config-server-rs\",
+ members: [
+   {_id: 0, host: \"mongo-config-server-1\"},
+   {_id: 1, host: \"mongo-config-server-2\"},
+   {_id: 2, host: \"mongo-config-server-3\"}
+ ]
+})"
+
+docker exec -it mongos-router-1 mongosh --port 27017 --eval "db.runCommand({ ping: 1 })" | grep ok
+docker exec -it mongos-router-2 mongosh --port 27017 --eval "db.runCommand({ ping: 1 })" | grep ok
+
+docker exec -it mongos-router-1 mongosh --port 27017 --eval "sh.addShard(\"mongo-shard1-rs/mongo-shard1-1:27017,mongo-shard1-2:27017,mongo-shard1-3:27017\")"
+docker exec -it mongos-router-1 mongosh --port 27017 --eval "sh.addShard(\"mongo-shard2-rs/mongo-shard2-1:27017,mongo-shard2-2:27017,mongo-shard2-3:27017\")"
+
+docker exec -it mongos-router-2 mongosh --port 27017 --eval "sh.addShard(\"mongo-shard1-rs/mongo-shard1-1:27017,mongo-shard1-2:27017,mongo-shard1-3:27017\")"
+docker exec -it mongos-router-2 mongosh --port 27017 --eval "sh.addShard(\"mongo-shard2-rs/mongo-shard2-1:27017,mongo-shard2-2:27017,mongo-shard2-3:27017\")"
+
+
+conn string: mongodb://localhost:27100,localhost:27200

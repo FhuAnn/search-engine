@@ -1,0 +1,109 @@
+version: "3.8"
+
+services:
+  # Shard 1
+  mongo-shard1-1:
+    image: mongo:5
+    container_name: mongo-shard1-1
+    networks:
+      - mongodb-network
+    ports:
+      - "27101:27017"
+    command: mongod --shardsvr --replSet mongo-shard1-rs --port 27017 --bind_ip localhost,mongo-shard1-1
+
+  mongo-shard1-2:
+    image: mongo:5
+    container_name: mongo-shard1-2
+    networks:
+      - mongodb-network
+    ports:
+      - "27102:27017"
+    command: mongod --shardsvr --replSet mongo-shard1-rs --port 27017 --bind_ip localhost,mongo-shard1-2
+
+  mongo-shard1-3:
+    image: mongo:5
+    container_name: mongo-shard1-3
+    networks:
+      - mongodb-network
+    ports:
+      - "27103:27017"
+    command: mongod --shardsvr --replSet mongo-shard1-rs --port 27017 --bind_ip localhost,mongo-shard1-3
+
+  # Shard 2
+  mongo-shard2-1:
+    image: mongo:5
+    container_name: mongo-shard2-1
+    networks:
+      - mongodb-network
+    ports:
+      - "27201:27017"
+    command: mongod --shardsvr --replSet mongo-shard2-rs --port 27017 --bind_ip localhost,mongo-shard2-1
+
+  mongo-shard2-2:
+    image: mongo:5
+    container_name: mongo-shard2-2
+    networks:
+      - mongodb-network
+    ports:
+      - "27202:27017"
+    command: mongod --shardsvr --replSet mongo-shard2-rs --port 27017 --bind_ip localhost,mongo-shard2-2
+
+  mongo-shard2-3:
+    image: mongo:5
+    container_name: mongo-shard2-3
+    networks:
+      - mongodb-network
+    ports:
+      - "27203:27017"
+    command: mongod --shardsvr --replSet mongo-shard2-rs --port 27017 --bind_ip localhost,mongo-shard2-3
+
+  # Config Servers
+  mongo-config-server-1:
+    image: mongo:5
+    container_name: mongo-config-server-1
+    networks:
+      - mongodb-network
+    ports:
+      - "27001:27017"
+    command: mongod --configsvr --replSet mongo-config-server-rs --port 27017 --bind_ip localhost,mongo-config-server-1
+
+  mongo-config-server-2:
+    image: mongo:5
+    container_name: mongo-config-server-2
+    networks:
+      - mongodb-network
+    ports:
+      - "27002:27017"
+    command: mongod --configsvr --replSet mongo-config-server-rs --port 27017 --bind_ip localhost,mongo-config-server-2
+
+  mongo-config-server-3:
+    image: mongo:5
+    container_name: mongo-config-server-3
+    networks:
+      - mongodb-network
+    ports:
+      - "27003:27017"
+    command: mongod --configsvr --replSet mongo-config-server-rs --port 27017 --bind_ip localhost,mongo-config-server-3
+
+  # Mongos Routers
+  mongos-router-1:
+    image: mongo:5
+    container_name: mongos-router-1
+    networks:
+      - mongodb-network
+    ports:
+      - "27100:27017"
+    command: mongos --configdb mongo-config-server-rs/mongo-config-server-1:27017,mongo-config-server-2:27017,mongo-config-server-3:27017 --port 27017 --bind_ip localhost,mongos-router-1
+
+  mongos-router-2:
+    image: mongo:5
+    container_name: mongos-router-2
+    networks:
+      - mongodb-network
+    ports:
+      - "27200:27017"
+    command: mongos --configdb mongo-config-server-rs/mongo-config-server-1:27017,mongo-config-server-2:27017,mongo-config-server-3:27017 --port 27017 --bind_ip localhost,mongos-router-2
+
+networks:
+  mongodb-network:
+    driver: bridge
