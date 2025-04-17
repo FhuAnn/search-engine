@@ -92,5 +92,5 @@ def build_inverted_index_sharding():
             upsert=True
         )
         
-# build_inverted_index_sharding()
+build_inverted_index_sharding()
 build_inverted_index_plain()
